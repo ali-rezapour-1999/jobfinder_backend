@@ -12,7 +12,7 @@ class CustomUserAdmin(BaseUserAdmin):
          'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login',)}),
     )
-    readonly_fields = ('create_at', 'slug_id',)
+    readonly_fields = ('created_at', 'slug_id',)
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

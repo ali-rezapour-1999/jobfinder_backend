@@ -1,15 +1,18 @@
-from django.urls import path, include
+from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import RegisterViewSet, LoginViewSet, PasswordResetRequestViewSet, PasswordResetConfirmViewSet
+from .views import AuthViewSet
 
 router = DefaultRouter()
-router.register(r'register', RegisterViewSet, basename='register')
-router.register(r'login', LoginViewSet, basename='login')
-router.register(r'password-reset', PasswordResetRequestViewSet,
-                basename='password-reset-request')
-router.register(r'password-reset-confirm',
-                PasswordResetConfirmViewSet, basename='password-reset-confirm')
+router.register('auth', AuthViewSet, basename='auth')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('auth/register/',
+         AuthViewSet.as_view({'post': 'register'}), name='register'),
+    path('auth/verify-email/',
+         AuthViewSet.as_view({'post': 'verify_email'}), name='verify_email'),
+    path('auth/login/', AuthViewSet.as_view({'post': 'login'}), name='login'),
+    path('auth/verify-login/',
+         AuthViewSet.as_view({'post': 'verify_login'}), name='verify_login'),
 ]
+
+urlpatterns += router.urls

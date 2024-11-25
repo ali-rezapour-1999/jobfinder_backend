@@ -3,6 +3,15 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from core.utils import generate_unique_id
 
 
+class BaseModel (models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    class Mete:
+        abstract = True
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email,  password=None, **extra_fields):
         if not email:
@@ -25,12 +34,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True,)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = "User"
+        verbose_name_plural = "User"
 
     def __str__(self):
         return self.email

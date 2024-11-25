@@ -1,26 +1,38 @@
 from django.contrib import admin
-from .models import Profile, WorkHistory, Education, Skill
+from .models import Profile, WorkHistory, Education, Skill, SocialMedia
+
+
+@admin.register(SocialMedia)
+class SocialMediaAdmin(admin.ModelAdmin):
+    def get_fieldsets(self, request, obj=None):
+        fields = [field.name for field in obj._meta.get_fields()
+                  if not field.auto_created]
+        fields = [f for f in fields if f not in ('created_at', 'updated_at')]
+        return [
+            ('Main Information', {'fields': fields}),
+            ('Timestamps', {'fields': ('created_at', 'updated_at')}),
+        ]
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'nickname', 'phone_number',
+    list_display = ('user',  'phone_number',
                     'is_active', 'created_at')
     list_filter = ('gender', 'state', 'city', 'is_active')
     search_fields = ('user__email', 'slug_id', 'phone_number')
     readonly_fields = ('slug_id', 'created_at', 'updated_at')
     fieldsets = (
         ("Personal Info", {
-            'fields': ('slug_id', 'user', 'first_name', 'last_name', 'nickname', 'phone_number', 'age', 'gender', 'state', 'city', 'address')
+            'fields': ('slug_id', 'user', 'first_name', 'last_name',  'phone_number', 'age', 'gender', 'profile_image')
+        }),
+        ("Address", {
+            'fields': ('state', 'city', 'address')
         }),
         ("Professional Info", {
             'fields': ('skills', 'description_myself', 'cv_file')
         }),
-        ("Social Media", {
-            'fields': ('telegram', 'instagram', 'twitter', 'linkedin', 'github', 'gitlab', 'gitbe')
-        }),
         ("Other Info", {
-            'fields': ('profile_image', 'is_active', 'created_at', 'updated_at')
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
